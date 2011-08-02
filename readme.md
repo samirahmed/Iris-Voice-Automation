@@ -1,7 +1,7 @@
 [see the iris webpage]: http://www.samir-ahmed.com/iris.html
 [contact me]: http://www.samir-ahmed.com
 
-# Iris Voice Automation
+# README: Iris Voice Automation
 
 An interactive desktop assistant - uses voice commands to answer and automate simple lookup and playing tasks
 For simple tasks like checking the weather and brief wikipedia queries.
@@ -24,8 +24,19 @@ For more information [see the iris webpage] or [contact me]
 
 ## How To Build
 
-The source code available in the github repository is NOT sufficient to build iris
-Please [see the iris webpage] to download all the required files
+To build Iris, clone the repository
+
+	$ git clone git@github.com:samirahmed/Iris-Voice-Automation.git
+
+Extract the zip file "lib.zip" found in the folder
+
+	 ./Iris-Voice-Automation/Iris_0.1.0/lib/
+
+The archived .zip lib.zip contains all the non source .jar dependencies
+
+After doing this you have all the necessary files for building.
+
+Suggested to use the eclipse IDE and build.xml file to build and run
 
 ## License Information
 

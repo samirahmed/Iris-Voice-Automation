@@ -1,5 +1,6 @@
 [see the iris webpage]: http://www.samir-ahmed.com/iris.html
 [contact me]: http://www.samir-ahmed.com
+[iris.zip]: http://dl.dropbox.com/u/36801801/Iris.zip
 
 # README: Iris Voice Automation
 
@@ -37,6 +38,16 @@ The archived .zip lib.zip contains all the non source .jar dependencies
 After doing this you have all the necessary files for building.
 
 Suggested to use the eclipse IDE and build.xml file to build and run
+
+## Binary or Executable File
+
+To get the latest binary / Executable file [Version 0.1]
+
+- Download this [iris.zip] file
+- Extract the zip
+- Run the iris_0.1.jar file with the following command
+
+	java -jar iris_0.1.jar
 
 ## License Information
 

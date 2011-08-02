@@ -47,7 +47,7 @@ To get the latest binary / Executable file [Version 0.1]
 - Extract the zip
 - Run the iris_0.1.jar file with the following command
 
-	java -jar iris_0.1.jar
+	 $ java -jar iris_0.1.jar
 
 ## License Information
 

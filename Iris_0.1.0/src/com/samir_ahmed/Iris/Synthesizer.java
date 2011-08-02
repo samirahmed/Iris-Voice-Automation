@@ -99,7 +99,7 @@ public class Synthesizer implements Runnable {
 
 		// Assign the audiodevice from the future it is stored in
 		AssignAudioLine();
-		Iris.printTime();
+		//Iris.printTime();
 
 		//Convert to good ole' plain english ascii characters
 		rawText = Normalizer.normalize(rawText, Form.NFD)
@@ -132,7 +132,7 @@ public class Synthesizer implements Runnable {
 		UserText = smartTokenize(rawText);
 		Files = UserText.size();
 
-		System.out.println(rawText);
+		System.out.println("\n"+rawText);
 	}
 	
 	/** SmartTokenize : Function for parsing by grammar and restructuring output: Average Run Time ~ 12 ms **/

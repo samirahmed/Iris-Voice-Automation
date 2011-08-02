@@ -1,9 +1,7 @@
 package com.samir_ahmed.Iris;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -48,8 +46,7 @@ public class Iris {
 		this.exs = Executors.newFixedThreadPool(20);
 
 		this.recognizer = new Recognizer(exs);
-		this.recognizerFuture = exs.submit(recognizer);
-
+		
 		this.Tagger = new PoSTagger();		
 		this.TaggerFuture = exs.submit(Tagger);
 
@@ -62,13 +59,21 @@ public class Iris {
 
 	public void go(){
 		try {
+			
+			/*Execute the recognizer on a seperate thread and wait for response*/
+			this.recognizerFuture = exs.submit(recognizer);
 			this.utterance = recognizerFuture.get()[0];
+			
+			/*Parse confidence as double*/
 			this.confidence = Double.parseDouble(recognizerFuture.get()[1]);
 
+			/*If we are below 70 percent, we respond that we could not hear correctly*/
 			if (confidence < 0.700){
 				this.synthesizer.setAnswer("I'm Sorry. I Am Not Sure I Hear You Correctly");
 				this.openURL = "";
 			}
+			
+			/*If we are confident about the result we select a module and run it*/
 			else{
 				int ModuleNo = getModuleNumber(this.utterance);
 				if (ModuleNo<0){
@@ -79,6 +84,11 @@ public class Iris {
 					IrisModule SelectedModule = Modules.get(ModuleNo);
 					SelectedModule.setUtterance(utterance);
 					Future<String[]> AnswerFuture = exs.submit(SelectedModule);
+					
+					/* All Iris Modules return a String Array
+					 * The First string is the answer to be synthesize
+					 * The second a browser url to be opend
+					 * */
 					this.Answer = AnswerFuture.get();
 					this.voice = Answer[0]; 
 					this.openURL = Answer[1]; 
@@ -88,6 +98,8 @@ public class Iris {
 			boolean voiceOut=false;
 			boolean browserOut=false;
 
+			
+			/* We run the synthesizer and / or browser opener if necessary */
 			if(voice != null && !voice.equals("")){
 				this.synthesizer.setAnswer(voice);
 				this.synthesizerFuture = this.exs.submit(synthesizer);
@@ -100,6 +112,7 @@ public class Iris {
 				browserOut=true;
 			}
 
+			/*Wait for execution to be completed*/
 			if(voiceOut){
 				this.synthesizerFuture.get();
 			}
@@ -110,18 +123,6 @@ public class Iris {
 
 
 		} 
-		catch (InterruptedException ee) {
-			ee.printStackTrace();
-			exit();
-		} 
-		catch (ExecutionException ee) {
-			ee.printStackTrace();
-			exit();
-		}
-		catch (MalformedURLException ee){
-			ee.printStackTrace();
-			exit();
-		}
 		catch (Exception ee){
 			ee.printStackTrace();
 			exit();
@@ -130,7 +131,7 @@ public class Iris {
 
 	private void exit(){
 		exs.shutdown();
-		System.out.println("Iris is Closing");
+		System.out.println("\n Response Complete \n ----------------- \n");
 		//System.exit(0);
 	}
 
@@ -190,7 +191,7 @@ public class Iris {
 		for (String word : UtteranceArray){
 			if(PrimaryKeyMap.containsKey(word)){
 				ValidModules.addAll(PrimaryKeyMap.get(word));
-				System.out.println("valid = " + word);
+				System.out.println("Valid Primary Key = " + word);
 			}
 		}
 
@@ -222,7 +223,7 @@ public class Iris {
 			for (Integer vm : ValidModules){
 				for(String rgx : RegExKeyMap.get(vm)){
 					if(taggedUtterance.matches(rgx)){
-						System.out.println(taggedUtterance + " matches : " + rgx);
+						System.out.println(taggedUtterance + " matches RE Key : " + rgx);
 						if(rgx.length() > longestRegEx.length()){
 							ModuleNumber = vm;	
 						}
@@ -236,7 +237,11 @@ public class Iris {
 	public static void main(String[] args) {
 		//  IRIS Point of Entry
 		try{
+			System.out.println("IRIS VOICE AUTOMATION - Created by Samir Ahmed 2011 " +
+							   "\n Please visit http://www.samir-ahmed.com/ for more information " +
+							   "\n To report issues please go to https://www.github.com/samirahmed\n");
 			Iris iris = new Iris();
+			Thread.sleep(500);
 			iris.go();
 			iris.exit();
 		}
@@ -249,7 +254,7 @@ public class Iris {
 
 	public static void printTime(){
 		if (Iris.StartTime != 0){
-			System.out.println("Time Elapsed : " + (System.currentTimeMillis()-Iris.StartTime) );
+			System.out.println("Total Response Time: " + ((System.currentTimeMillis()-Iris.StartTime)/1000.0) +" seconds" );
 		}
 		else{
 			System.err.println("No Start Time Set");

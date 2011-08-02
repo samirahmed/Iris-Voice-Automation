@@ -86,7 +86,7 @@ public class whoWhat implements IrisModule{
 				count++;
 			}
 
-			System.out.println("Total Query Time: " + (System.currentTimeMillis()-start));
+			System.out.println("Source: Wikipedia.org - Query Response Time: " + (System.currentTimeMillis()-start) + " ms");
 			return Answer;	
 		}
 		catch(Exception ee){
@@ -168,7 +168,7 @@ public class whoWhat implements IrisModule{
 		else {
 			Answer = taskResponse;
 			isFound = true;
-			System.out.println(Answer);
+			System.out.print("Answer Found! ");
 			openURL = "";
 		}
 	}

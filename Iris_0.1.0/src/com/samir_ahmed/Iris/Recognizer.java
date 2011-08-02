@@ -110,7 +110,7 @@ public class Recognizer implements Callable<String[]> {
 				startIndex = stopIndex + 15;
 				stopIndex =  googleSpeechAPIResponse.indexOf("}]}") - 1;
 				confidence = Double.parseDouble(googleSpeechAPIResponse.substring(startIndex,stopIndex));
-				System.out.println("Recognizer: Utterance : " + command+ " : Confidence Level: "+confidence);
+				System.out.println("\nUtterance : " + command.toUpperCase() + "\nConfidence Level: "+(confidence*100)+"\n");
 			}
 		}
 		catch (NullPointerException npE){

@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javaFlacEncoder.FLAC_FileEncoder;
@@ -160,9 +161,18 @@ public class Recorder {
 		/* Create a byte array of appropriate sample size*/
 		byte[] sampleDataByteArray = new byte[sampleDataBufferSize];
 
+		
+		/* User input required to indicate that recording has started*/
+		System.out.print("Hit Enter to Activate: ");
+
+		Scanner sc = new Scanner(System.in);
+		sc.nextLine();
+		
+		System.out.print("\nWaiting for Speech");
+		
 		/* Start the microphone and the secondaryLine for sampling*/
-		mic1.start();
-		//exs.submit(mic1);
+		//mic1.start();
+		exs.submit(mic1);
 		Thread.sleep(100);
 		secondaryLine.start();
 
@@ -172,8 +182,6 @@ public class Recorder {
 		LinkedList<Double> rmsDeque = new LinkedList<Double>();
 		double total =0;
 
-		/* Indicate that recording has started*/
-		System.out.println("Start Speaking ...");
 
 		/* While we are silent, i.e no speech detected, we remain in this loop*/
 		while (isSilent(sampleCount++,startTime)){
@@ -208,7 +216,7 @@ public class Recorder {
 			}
 
 			/* For User Feedback */
-			System.out.println(maxRMS/staticAverage);
+			//System.out.println(maxRMS/staticAverage);
 		}
 		secondaryLine.stop();
 		
@@ -300,7 +308,7 @@ public class Recorder {
 		double total =0;
 		byte[] sampleDataByteArray = new byte[sampleDataBufferSize];
 		LinkedList<Double> rmsDeque = new LinkedList<Double>();
-		System.out.println("Recording");
+		System.out.println("\nRecording");
 
 		secondaryLine.start();
 
@@ -334,12 +342,12 @@ public class Recorder {
 			}
 
 			/*For User FeedBack*/
-			System.out.println(maxRMS/staticAverage +"      " + maxRMS/signalAverage);
+			//System.out.println(maxRMS/staticAverage +"      " + maxRMS/signalAverage);
 		}
 
 		Iris.setStartTime();
 		
-		System.out.println("Command Captured");
+		System.out.println("Speech Captured. Connecting to Google Speech API ...");
 
 		/*Stop Recording, flush lines and close*/
 		secondaryLine.flush();

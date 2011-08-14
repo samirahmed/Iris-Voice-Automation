@@ -23,22 +23,41 @@ For more information [see the iris webpage] or [contact me]
 #### What is the weather in San Francisco?
 	Weather for san francisco, Currently Cloudy, at 60 degrees. Forecast says, Mostly Sunny. A high of 65 and A low of 54
 
-## How To Build
+## How To Build -ANT
 
 To build Iris, clone the repository
 
 	$ git clone git@github.com:samirahmed/Iris-Voice-Automation.git
 
+Move into cloned directory,
+Using ANT to build
+
+	cd ./Iris-Voice-Automation
+	ant compile jar
+
+This will create a new folder called build with the jar in it
+
+At the moment, the jar needs external files to run correctly
+
 Extract the zip file "lib.zip" found in the folder
 
-	 ./Iris-Voice-Automation/Iris_0.1.0/lib/
+	 ./Iris-Voice-Automation/lib/lib.zip
 
 The archived .zip lib.zip contains all the non source .jar dependencies
 
+Copy this directory to the new build/jar folder
+
+	./Iris-Voice-Automation/build/jar/
+
+Now copy the res/ and misc/ folder to build/jar folder
+
 After doing this you have all the necessary files for building.
 
-Suggested to use the eclipse IDE and build.xml file to build and run
+Go to the build/jar directory and run the jar
 
+	cd ./Iris-Voice-Automation/build/jar/
+	java -jar Iris_0.1.0.jar
+	
 ## Binary or Executable File
 
 To get the latest binary / Executable file [Version 0.1]

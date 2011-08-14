@@ -4,6 +4,8 @@ bin/
 lib/
 *.wav
 *.flac
+grammar/
+exclude/
 
 # Github Suggestions #
 ######################
@@ -39,6 +41,8 @@ lib/
 # OS generated files #
 ######################
 .DS_Store?
+.DS_Store
+.metadata
 ehthumbs.db
 Icon?
 Thumbs.db

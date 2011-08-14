@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry excluding="com/samir/Iris/tagger.java|com/samir/Iris/WeatherManOld.java|com/samir/Iris/WeatherManTurbo.java|com/samir/Iris/weatherTestModule.java|com/samir/Iris/Tester.java|com/samir/Iris/PlayMP3.java|com/samir/Iris/imapTest.java|com/samir/Iris/gCalendar.java|com/samir/Iris/gcalTest.java|com/samir/Iris/LoaderTest.java|com/samir_ahmed/Iris/gCalendar.java|com/samir_ahmed/Iris/gcalTest.java|com/samir_ahmed/Iris/imapTest.java|com/samir_ahmed/Iris/PlayMP3.java|com/samir_ahmed/Iris/tagger.java|com/samir_ahmed/Iris/Tester.java|com/samir_ahmed/Iris/WeatherManOld.java|com/samir_ahmed/Iris/WeatherManTurbo.java|com/samir_ahmed/Iris/weatherTestModule.java|com/samir_ahmed/Iris/LoaderTest.java|com/samir_ahmed/Iris/Main.java" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/iris_lib"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>

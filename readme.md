@@ -1,5 +1,6 @@
 [see the iris webpage]: http://www.samir-ahmed.com/iris.html
 [contact me]: http://www.samir-ahmed.com
+[lib.zip]: http://dl.dropbox.com/u/36801801/lib.zip
 [iris.zip]: http://dl.dropbox.com/u/36801801/Iris.zip
 
 # README: Iris Voice Automation
@@ -37,21 +38,13 @@ Using ANT to build
 
 This will create a new folder called build with the jar in it
 
-At the moment, the jar needs external files to run correctly
+To run correctly, all the dependencies for the jar are needed
 
-Extract the zip file "lib.zip" found in the folder
+Download and Extract the zip file "[lib.zip]" to 
 
-	 ./Iris-Voice-Automation/lib/lib.zip
+	 ./Iris-Voice-Automation/
 
-The archived .zip lib.zip contains all the non source .jar dependencies
-
-Copy this directory to the new build/jar folder
-
-	./Iris-Voice-Automation/build/jar/
-
-Now copy the res/ and misc/ folder to build/jar folder
-
-After doing this you have all the necessary files for building.
+You should now have three folders, src/ lib/ and build/, and all the necessary files
 
 Go to the build/jar directory and run the jar
 

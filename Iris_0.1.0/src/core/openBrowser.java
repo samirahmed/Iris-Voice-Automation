@@ -1,4 +1,4 @@
-package com.samir_ahmed.Iris;
+package core;
 
 import java.net.MalformedURLException;
 

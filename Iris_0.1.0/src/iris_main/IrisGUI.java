@@ -1,4 +1,4 @@
-package com.samir_ahmed.Iris;
+package iris_main;
 
 // Crappy GUI I put into place so that one could have a button to click on...
 

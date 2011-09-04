@@ -1,4 +1,5 @@
-package com.samir_ahmed.Iris;
+package core;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,7 +8,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.util.LinkedList;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javaFlacEncoder.FLAC_FileEncoder;
@@ -20,7 +20,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
-public class Recorder {
+public class Recorder2 {
 
 	/**
 	 * Microphone is a nested Class for executing the recording
@@ -88,19 +88,20 @@ public class Recorder {
 	private long speechDetectionTime;
 	private boolean speechDetected;
 
-	private final double NOISE_FACTOR= 8.00;
-	private final long BYTES_PER_MILLISECOND = 16*2;
-	//private final long WAVE_HEADER = 44;
-	private final double SILENCE_FACTOR= 0.10;
+	private final double NOISE_FACTOR= 4.00;
+	private final long BYTES_PER_MILLISECOND = 16*4;
+	private final long WAVE_HEADER = 44;
+	private final double SILENCE_FACTOR= 0.20;
 	private final long NOSPEECH_TIMEOUT = 10000;
 	private final long LONGSPEECH_TIMEOUT = 10000;
 	private final ExecutorService exs;
-	private final int SAMPLE_RATE= 1000;
-	private final long SMOOTHENING_BUFFER = 1000;
-	//private final int AUTOSTOP_RATE=40;
+	private final int SAMPLE_RATE= 40;
+	private final long SMOOTHENING_BUFFER = 200;
+	private final int AUTOSTOP_RATE=40;
+
 
 	/** Constructor, only requires the execution service for threading*/
-	public Recorder(ExecutorService ExServ){
+	public Recorder2(ExecutorService ExServ){
 
 		// Assign Executor Service to exs
 		this.exs = ExServ; 
@@ -140,40 +141,30 @@ public class Recorder {
 		this.targetType = AudioFileFormat.Type.WAVE;
 
 
-		/*Create a Recorder to Get Input Data on mic1*/
-		this.mic1 = new Recorder.Microphone(
+		/*Create a Recorder2 to Get Input Data on mic1*/
+		this.mic1 = new Microphone(
 				primaryLine,
 				targetType,
 				outputFile);
+
 	}
 
 	/** isActive(); calling this method will block execution until speech is heard or the microphone has timed out
-	 *  will return true once voice activity is measured otherwise false
-	 * @throws InterruptedException */
-	public boolean isActive() throws InterruptedException {
+	 *  will return true once voice activity is measured otherwise false*/
+	public boolean isActive() throws InterruptedException, IOException{
 
-		/* Set the sampling frequency [assuming samples at this rate ...]
-		 * Original I chose bytesPerSec / this.SAMPLE_RATE; but
-		 * This allows for short samples (16 bytes to be draw at a time)
-		 * Initial Problem was that there would be chunks of audio missing. */
-		int sampleDataBufferSize = 256;//audioFormat.getSampleSizeInBits();
+		/* Get the bytes per second */
+		int bytesPerSec = audioFormat.getSampleSizeInBits() * (int) audioFormat.getSampleRate();
+
+		/* Set the sampling frequency [assuming samples at this rate ...]*/
+		int sampleDataBufferSize = bytesPerSec / this.SAMPLE_RATE;
 
 		/* Create a byte array of appropriate sample size*/
 		byte[] sampleDataByteArray = new byte[sampleDataBufferSize];
 
-		
-		/* User input required to indicate that recording has started*/
-		System.out.print("Hit Enter to Activate: ");
-
-		Scanner sc = new Scanner(System.in);
-		sc.nextLine();
-		
-		System.out.print("\nWaiting for Speech");
-		
 		/* Start the microphone and the secondaryLine for sampling*/
-		//mic1.start();
-		exs.submit(mic1);
-		Thread.sleep(100);
+		//exs.submit(mic1);
+		mic1.start();
 		secondaryLine.start();
 
 		/* Intializing for scope*/
@@ -182,21 +173,20 @@ public class Recorder {
 		LinkedList<Double> rmsDeque = new LinkedList<Double>();
 		double total =0;
 
+		/* Indicate that recording has started*/
+		System.out.println("Listening");
 
 		/* While we are silent, i.e no speech detected, we remain in this loop*/
 		while (isSilent(sampleCount++,startTime)){
-			
-			Thread.sleep(1000/SAMPLE_RATE);
-			//secondaryLine.start();
+
 			/* Blocking Read Assignment : will fill sampleDataByteArray */
 			secondaryLine.read(sampleDataByteArray, 0, sampleDataBufferSize);
-			//secondaryLine.stop();
 			
 			/* Convert the array to floating point values between zero and one*/
-			float[] fArray = Recorder.getFloatArray(sampleDataByteArray);
+			float[] fArray = Recorder2.getFloatArray(sampleDataByteArray);
 
 			/* Determine the root mean square*/
-			Double rms = Recorder.getRMS(fArray);
+			Double rms = Recorder2.getRMS(fArray);
 
 			/* Push the rms to the back of the deque*/
 			rmsDeque.push(rms); 
@@ -216,10 +206,9 @@ public class Recorder {
 			}
 
 			/* For User Feedback */
-			//System.out.println(maxRMS/staticAverage);
+			System.out.println(maxRMS/staticAverage);
 		}
-		secondaryLine.stop();
-		
+
 		/* Determine the time at which Speech was detect (necessary for cropping later) */
 		this.speechDetectionTime = getSpeechDetectionTime(System.currentTimeMillis(),startTime);
 
@@ -228,10 +217,8 @@ public class Recorder {
 		 * otherwise true
 		 *  */
 		if ((System.currentTimeMillis()-startTime) >= NOSPEECH_TIMEOUT){
-			System.out.println(System.currentTimeMillis()-startTime);
 			mic1.stopRecording();
 			secondaryLine.flush();
-			secondaryLine.stop();
 			secondaryLine.close();
 			this.speechDetected = false;
 		}
@@ -263,7 +250,7 @@ public class Recorder {
 			FileInputStream istream = new FileInputStream(this.outputFile);		
 
 			/*Calculate the number of bytes to be cropped*/
-			long cropLength = ((long)speechDetectionTime*BYTES_PER_MILLISECOND);
+			long cropLength = WAVE_HEADER+((long)speechDetectionTime*BYTES_PER_MILLISECOND);
 
 			/* Initialize the new cropped.wav file */
 			this.croppedWaveFile = new File("cropped.wav");
@@ -293,7 +280,7 @@ public class Recorder {
 		FLAC_FileEncoder encoder1 = new FLAC_FileEncoder();
 		File infile = this.croppedWaveFile;
 		File outfile = new File("recording.flac");
-		encoder1.useThreads(true);
+		//encoder1.useThreads(false);
 		encoder1.encode(infile, outfile);
 	}
 
@@ -301,33 +288,28 @@ public class Recorder {
 	private void autoStop(){
 
 		/* Similar variables as before !See isActive() Method!*/
-		//int bytesPerSec = audioFormat.getSampleSizeInBits() * (int) audioFormat.getSampleRate();
-		int sampleDataBufferSize = 256 ; //bytesPerSec / this.AUTOSTOP_RATE;
+		int bytesPerSec = audioFormat.getSampleSizeInBits() * (int) audioFormat.getSampleRate();
+		int sampleDataBufferSize = bytesPerSec / this.AUTOSTOP_RATE;
 		int sampleCount=0;
 		long startTime = System.currentTimeMillis();
 		double total =0;
 		byte[] sampleDataByteArray = new byte[sampleDataBufferSize];
 		LinkedList<Double> rmsDeque = new LinkedList<Double>();
-		System.out.println("\nRecording");
+		System.out.println("Recording");
 
 		secondaryLine.start();
 
 		/*While still speaking, keep recording*/
 		while (isSpeech(startTime,sampleCount++)){
-			try {
-				Thread.sleep(20);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 			/*Blocking read assignment to the buffer*/
 			secondaryLine.read(sampleDataByteArray, 0, sampleDataBufferSize);
 
 			/* Generate floating point values between 0 and 1*/
-			float[] fArray = Recorder.getFloatArray(sampleDataByteArray);
+			float[] fArray = Recorder2.getFloatArray(sampleDataByteArray);
 
 			/* Calculate RMS */
-			Double rms = Recorder.getRMS(fArray);
+			Double rms = Recorder2.getRMS(fArray);
 
 			/* Push to Deque and calculate an average while recieving signal and maxRMS */
 			rmsDeque.push(rms); 
@@ -342,19 +324,16 @@ public class Recorder {
 			}
 
 			/*For User FeedBack*/
-			//System.out.println(maxRMS/staticAverage +"      " + maxRMS/signalAverage);
+			System.out.println(maxRMS/staticAverage +"      " + maxRMS/signalAverage);
 		}
 
-		Iris.setStartTime();
-		
-		System.out.println("Speech Captured. Connecting to Google Speech API ...");
+		//Iris.printTime();
+		System.out.println("Processing...");
 
 		/*Stop Recording, flush lines and close*/
-		secondaryLine.flush();
-		secondaryLine.stop();
-		secondaryLine.close();
-
 		mic1.stopRecording();
+		secondaryLine.flush();
+		secondaryLine.close();
 	}
 
 	/** Test for speech or if Timed Out. Return true if still speaking, otherwise returns false*/
@@ -368,7 +347,7 @@ public class Recorder {
 
 		if (count>5){
 			if ((System.currentTimeMillis()-startTime) < LONGSPEECH_TIMEOUT && 
-					(this.maxRMS > this.staticAverage*(NOISE_FACTOR/2)) || 
+					(this.maxRMS > this.staticAverage*(NOISE_FACTOR/2)) && 
 					(maxRMS > this.signalAverage*SILENCE_FACTOR) )
 			{
 				return true;
@@ -464,23 +443,23 @@ public class Recorder {
 		for (int ii = 0; ii < sArray.length; ii++) {
 			fArray[ii] = ((float)sArray[ii])/0x8000;
 		}
+
 		return fArray;
 	}
 
 	/*Tester function: main*/
 
+
 	public static void main(String[] args) throws InterruptedException, IOException {
 		try{
 			ExecutorService exs = Executors.newFixedThreadPool(20);
-			Recorder rr = new Recorder(exs);
+			Recorder2 rr = new Recorder2(exs);
 			if (rr.isActive()){
 				rr.record();
 			}
 			else{
-				System.out.println("No Activity");
 			}
-			System.out.println("Complete!");
-			exs.shutdown();
+			exs.shutdownNow();
 		}
 		catch(Exception ee){
 			ee.printStackTrace();

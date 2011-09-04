@@ -1,4 +1,4 @@
-package com.samir_ahmed.Iris;
+package modules;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -6,8 +6,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import utils.httpGET;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import core.Synthesizer;
+import core.openBrowser;
 
 public class YouTubePlayer implements IrisModule{
 

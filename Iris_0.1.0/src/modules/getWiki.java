@@ -1,4 +1,4 @@
-package com.samir_ahmed.Iris;
+package modules;
 
 import java.net.URLEncoder;
 import java.util.concurrent.Callable;
@@ -6,6 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
+
+import utils.httpGET;
+
 
 /**
  * Class - getWiki:  This class queries mobile.wikipedia and extracts the first sentence

@@ -1,4 +1,4 @@
-package com.samir_ahmed.Iris;
+package core;
 
 /**
  * 
@@ -10,6 +10,8 @@ package com.samir_ahmed.Iris;
  * Speed Test: Single Thread 4.3 seconds vs Multi-Threaded 1.2 Seconds
  * 
  **/
+
+import iris_main.Iris;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,6 +28,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+
+import utils.httpGET;
 
 import javazoom.jl.player.AudioDevice;
 import javazoom.jl.player.FactoryRegistry;

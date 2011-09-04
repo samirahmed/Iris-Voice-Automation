@@ -1,10 +1,21 @@
-package com.samir_ahmed.Iris;
+package iris_main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import utils.PoSTagger;
+
+import core.Recognizer;
+import core.Synthesizer;
+import core.openBrowser;
+
+import modules.IrisModule;
+import modules.WeatherMan;
+import modules.YouTubePlayer;
+import modules.whoWhat;
 
 public class Iris {
 
@@ -87,7 +98,7 @@ public class Iris {
 					
 					/* All Iris Modules return a String Array
 					 * The First string is the answer to be synthesize
-					 * The second a browser url to be opend
+					 * The second a browser url to be opened
 					 * */
 					this.Answer = AnswerFuture.get();
 					this.voice = Answer[0]; 

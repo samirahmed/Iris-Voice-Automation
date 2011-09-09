@@ -33,11 +33,11 @@ public class openBrowser implements Runnable{
 				this.browserURL=newBrowserURL;
 			}
 			else{
-				throw new MalformedURLException("Woah Invalied URL");
+				throw new MalformedURLException("Woah Invalid URL");
 			}
 		}
 		else{
-			throw new MalformedURLException("Woah Invalied URL");
+			throw new MalformedURLException("Woah Invalid URL");
 		}
 	}
 
@@ -50,11 +50,11 @@ public class openBrowser implements Runnable{
 				return browserURL;
 			}
 			else{
-				throw new MalformedURLException("Woah Invalied URL");
+				throw new MalformedURLException("Woah Invalid URL");
 			}
 		}
 		else{
-			throw new MalformedURLException("Woah Invalied URL");
+			throw new MalformedURLException("Woah Invalid URL");
 		}
 	}
 

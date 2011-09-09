@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 
 public class openBrowser implements Runnable{
 	
+        private boolean winFlag = false;
 	/**Constructor : sets browserURL to "" **/
 	public openBrowser(){
 		this.browserURL="";
@@ -11,7 +12,7 @@ public class openBrowser implements Runnable{
 		// Extract OS Name and check for win, mac or linux, 
 		// Selecting the appropriate default browser executing command
 		String osName = System.getProperty("os.name").toLowerCase();
-		if (osName.contains("win")){ this.DEFAULT_BROWSER = this.DEFAULT_BROWSER_WINDOWS; }
+		if (osName.contains("win")){ this.DEFAULT_BROWSER = this.DEFAULT_BROWSER_WINDOWS; winFlag = true; }
 		else if (osName.contains("mac")) {this.DEFAULT_BROWSER = this.DEFAULT_BROWSER_MAC;}
 		else if (osName.contains("nix")) {this.DEFAULT_BROWSER = this.DEFAULT_BROWSER_LINUX;}
 	}
@@ -21,7 +22,7 @@ public class openBrowser implements Runnable{
 	// These commands have been tested on macs and linux only. I assume the pc one will work correctly ...
 	private final String DEFAULT_BROWSER_LINUX = "x-www-browser";
 	private final String DEFAULT_BROWSER_MAC = "open";
-	private final String DEFAULT_BROWSER_WINDOWS = "start";
+	private final String DEFAULT_BROWSER_WINDOWS = "rundll32 url.dll,FileProtocolHandler ";
 	private String DEFAULT_BROWSER;
 	
 	/**Sets the desired url for the browser
@@ -62,9 +63,17 @@ public class openBrowser implements Runnable{
 	private synchronized void executeBrowser(){
 
 		try{
-			String[] browserCommand ={DEFAULT_BROWSER,getBrowserURL()};
-			Process browser = Runtime.getRuntime().exec(browserCommand);
-			browser.waitFor();		
+                        if (winFlag == true) {
+                          String browserCommand = DEFAULT_BROWSER + getBrowserURL();                
+			  Process browser = Runtime.getRuntime().exec(browserCommand);
+			  browser.waitFor();		
+                        }
+                        else {
+                          String[] browserCommand ={DEFAULT_BROWSER,getBrowserURL()};
+			  Process browser = Runtime.getRuntime().exec(browserCommand);
+			  browser.waitFor();		
+                        }
+
 		}
 		catch(Exception ee){
 			ee.printStackTrace();

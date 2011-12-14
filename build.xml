@@ -4,7 +4,7 @@
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
-<project basedir="." default="build" name="Iris_0.1.0">
+<project basedir="." default="build" name="Iris_0.2.0">
     <property environment="env"/>
 
     <property name="src.dir" value="src"/>
